@@ -1,6 +1,8 @@
 import { createInterface } from 'node:readline';
 import { stdin, stdout } from 'node:process';
 import { getCommands } from './cli_commands.js';
+import { initState } from './state.js';
+
 export function cleanInput(input: string): string[] {
     const trimmedInput = input.trim().toLowerCase()
     const splitInput = trimmedInput.split(" ")
@@ -10,11 +12,9 @@ export function cleanInput(input: string): string[] {
 
 
 export function startRepl() {
-    const rl = createInterface({
-        input: stdin,
-        output: stdout,
-        prompt: "pokedex > "
-    })
+    const state = initState()
+    const rl = state.readline
+    const commands = state.commands
     rl.prompt()
 
     rl.on("line", (line: string) => {
@@ -25,7 +25,6 @@ export function startRepl() {
         }
 
         const inputCommand = cleanedInput[0]
-        const commands = getCommands()
 
         const command = commands[inputCommand]
         if (!command) {
@@ -33,7 +32,7 @@ export function startRepl() {
             rl.prompt()
             return
         } else {
-            command.callback(commands)
+            command.callback(state)
         }
 
         rl.prompt()
