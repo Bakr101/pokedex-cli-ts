@@ -36,6 +36,7 @@ export class PokeAPI {
         const url = `${PokeAPI.baseURL}location-area/${locationName}`
         const cached = this.cache.get<Location>(url)
         if (cached) {
+            console.log(`Cache hit for pokemons in ${locationName}: ${url}`)
             return cached
         }
 

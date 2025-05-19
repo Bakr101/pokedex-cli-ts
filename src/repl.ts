@@ -24,18 +24,18 @@ export async function startRepl() {
         }
 
         const inputCommand = cleanedInput[0]
+        const inputArgs = cleanedInput.slice(1)
 
         const command = commands[inputCommand]
         if (!command) {
             console.log(`Unknown command: ${inputCommand}`)
             rl.prompt()
             return
-        } else {
-            try {
-                await command.callback(state)
-            } catch (error) {
-                console.error(error)
-            }
+        }
+        try {
+            await command.callback(state, ...inputArgs)
+        } catch (error) {
+            console.log(`Error: ${(error as Error).message}`)
         }
 
         rl.prompt()

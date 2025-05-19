@@ -1,4 +1,5 @@
 import { commandExit } from "./command_exit.js"
+import { commandExplore } from "./command_explore.js"
 import { commandHelp } from "./command_help.js"
 import { commandCache, commandMap } from "./command_map.js"
 import { commandMapb } from "./command_mapb.js"
@@ -31,6 +32,11 @@ export function getCommands(): Record<string, CLICommand> {
             name: "cache",
             description: "Show the cache of the Pokedex",
             callback: commandCache
+        },
+        explore: {
+            name: "explore",
+            description: "Explore a location",
+            callback: commandExplore
         }
     }
 }
