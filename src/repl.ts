@@ -1,6 +1,3 @@
-import { createInterface } from 'node:readline';
-import { stdin, stdout } from 'node:process';
-import { getCommands } from './cli_commands.js';
 import { initState } from './state.js';
 
 export function cleanInput(input: string): string[] {
@@ -11,13 +8,15 @@ export function cleanInput(input: string): string[] {
 
 
 
-export function startRepl() {
-    const state = initState()
+export async function startRepl() {
+    const state = initState(1000 * 60)
     const rl = state.readline
     const commands = state.commands
+
+
     rl.prompt()
 
-    rl.on("line", (line: string) => {
+    rl.on("line", async (line: string) => {
         const cleanedInput = cleanInput(line)
         if (cleanedInput.length === 0) {
             rl.prompt()
@@ -32,7 +31,11 @@ export function startRepl() {
             rl.prompt()
             return
         } else {
-            command.callback(state)
+            try {
+                await command.callback(state)
+            } catch (error) {
+                console.error(error)
+            }
         }
 
         rl.prompt()
